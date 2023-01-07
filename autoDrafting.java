@@ -82,7 +82,9 @@ public class autoDrafting extends LinearOpMode {
     HolonomicDrive holonomicDrive;
 
     private int[] liftPos = {0, 1800, 3000, 4500};
+    private int[] coneStack = {240, 265, 325, 370};
     int currentLiftPosition = 0;
+    private int currentConePosition = 0;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -122,8 +124,8 @@ public class autoDrafting extends LinearOpMode {
         holonomicDrive = new HolonomicDrive(FrontRightMotor, FrontLeftMotor, BackRightMotor, BackLeftMotor);
         Gyro = new gyro(FrontRightMotor, FrontLeftMotor, BackRightMotor, BackLeftMotor, imu);
 
-        LiftMotor1 = hardwareMap.get(DcMotorEx.class, "liftMotor1");
-        LiftMotor2 = hardwareMap.get(DcMotorEx.class, "liftMotor2");
+        LiftMotor1 = hardwareMap.get(DcMotorEx.class, "LiftMotor1");
+        LiftMotor2 = hardwareMap.get(DcMotorEx.class, "LiftMotor2");
         angleMotor = hardwareMap.get(DcMotorEx.class, "rotationMotor");
 
         LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -190,6 +192,53 @@ public class autoDrafting extends LinearOpMode {
 
                             Gyro.rotate(-30, .3);
 
+                            // retrieve from cone stack
+//
+//                            Gyro.rotate(-45,.3);
+//
+//                            runtime.reset();
+//                            holonomicDrive.autoDrive(0, 0.8);
+//                            while (opModeIsActive() && runtime.seconds() < 1.25) {
+//                            }
+//
+//                            currentConePosition = 3;
+//                            LiftMotor1.setTargetPosition(coneStack[currentConePosition]);
+//                            LiftMotor2.setTargetPosition(coneStack[currentConePosition]);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(-0.9);
+//                            LiftMotor2.setPower(-0.9);
+//
+//                            intakeServo.setPosition(-0.25);
+//
+//                            currentLiftPosition = 1;
+//                            LiftMotor1.setTargetPosition(currentLiftPosition);
+//                            LiftMotor2.setTargetPosition(currentLiftPosition);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(0.8);
+//                            LiftMotor2.setPower(0.8);
+//
+//                            runtime.reset();
+//                            holonomicDrive.autoDrive(180, 0.8);
+//                            while (opModeIsActive() && runtime.seconds() < 1.25) {
+//                            }
+//
+//                            Gyro.rotate(75, .3);
+//
+//                            currentLiftPosition = 3;
+//                            LiftMotor1.setTargetPosition(currentLiftPosition);
+//                            LiftMotor2.setTargetPosition(currentLiftPosition);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(0.8);
+//                            LiftMotor2.setPower(0.8);
+//
+//                            intakeServo.setPosition(0.25);
+//
+//                            Gyro.rotate(-30, .3);
+
+
                             // move left and park
 
                             runtime.reset();
@@ -202,28 +251,13 @@ public class autoDrafting extends LinearOpMode {
                             LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
                             LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
-                            currentLiftPosition = 0;
                             LiftMotor1.setTargetPosition(0);
                             LiftMotor2.setTargetPosition(0);
-                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                             LiftMotor1.setPower(-0.95);
                             LiftMotor2.setPower(-0.95);
 
                             LiftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                             LiftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-                            while (opModeIsActive() && runtime.seconds() < .5) {
-                            }
-
-                            runtime.reset();
-                            LiftMotor1.setPower(-0.5);
-                            LiftMotor2.setPower(-0.5);
-                            while (opModeIsActive() && runtime.seconds() < 1.25) {
-                            }
-
-                            LiftMotor1.setPower(0);
-                            LiftMotor2.setPower(0);
 
                             done = true;
 
@@ -252,30 +286,66 @@ public class autoDrafting extends LinearOpMode {
 
                             Gyro.rotate(-30, .3);
 
+                            // retrieve from cone stack
+//
+//                            Gyro.rotate(-45,.3);
+//
+//                            runtime.reset();
+//                            holonomicDrive.autoDrive(0, 0.8);
+//                            while (opModeIsActive() && runtime.seconds() < 1.25) {
+//                            }
+//
+//                            currentConePosition = 3;
+//                            LiftMotor1.setTargetPosition(coneStack[currentConePosition]);
+//                            LiftMotor2.setTargetPosition(coneStack[currentConePosition]);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(-0.9);
+//                            LiftMotor2.setPower(-0.9);
+//
+//                            intakeServo.setPosition(-0.25);
+//
+//                            currentLiftPosition = 1;
+//                            LiftMotor1.setTargetPosition(currentLiftPosition);
+//                            LiftMotor2.setTargetPosition(currentLiftPosition);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(0.8);
+//                            LiftMotor2.setPower(0.8);
+//
+//                            runtime.reset();
+//                            holonomicDrive.autoDrive(180, 0.8);
+//                            while (opModeIsActive() && runtime.seconds() < 1.25) {
+//                            }
+//
+//                            Gyro.rotate(75, .3);
+//
+//                            currentLiftPosition = 3;
+//                            LiftMotor1.setTargetPosition(currentLiftPosition);
+//                            LiftMotor2.setTargetPosition(currentLiftPosition);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(0.8);
+//                            LiftMotor2.setPower(0.8);
+//
+//                            intakeServo.setPosition(0.25);
+//
+//                            Gyro.rotate(-30, .3);
+
+                            // lower lift for park
+
                             holonomicDrive.autoDrive(0, 0);
 
                             LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
                             LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
-                            currentLiftPosition = 0;
                             LiftMotor1.setTargetPosition(0);
                             LiftMotor2.setTargetPosition(0);
-                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                             LiftMotor1.setPower(-0.95);
                             LiftMotor2.setPower(-0.95);
 
                             LiftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                             LiftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-                            while (opModeIsActive() && runtime.seconds() < .5) {
-                            }
-
-                            runtime.reset();
-                            LiftMotor1.setPower(-0.5);
-                            LiftMotor2.setPower(-0.5);
-                            while (opModeIsActive() && runtime.seconds() < 1.35) {
-                            }
 
                             LiftMotor1.setPower(0);
                             LiftMotor2.setPower(0);
@@ -312,33 +382,79 @@ public class autoDrafting extends LinearOpMode {
 
                             Gyro.rotate(-30, .3);
 
-                            holonomicDrive.autoDrive(0, 0);
+                            // navigate to cone stack
+//
+//                            runtime.reset();
+//                            holonomicDrive.autoDrive(0, 0.8);
+//                            while (opModeIsActive() && runtime.seconds() < .75) {
+//                            }
+//
+//                            Gyro.rotate(-45,.3);
+//
+//                            runtime.reset();
+//                            holonomicDrive.autoDrive(0, 0.8);
+//                            while (opModeIsActive() && runtime.seconds() < 1.25) {
+//                            }
+//
+//                            currentConePosition = 3;
+//                            LiftMotor1.setTargetPosition(coneStack[currentConePosition]);
+//                            LiftMotor2.setTargetPosition(coneStack[currentConePosition]);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(-0.9);
+//                            LiftMotor2.setPower(-0.9);
+//
+//                            intakeServo.setPosition(-0.25);
+//
+//                            currentLiftPosition = 1;
+//                            LiftMotor1.setTargetPosition(currentLiftPosition);
+//                            LiftMotor2.setTargetPosition(currentLiftPosition);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(0.8);
+//                            LiftMotor2.setPower(0.8);
+//
+//                            runtime.reset();
+//                            holonomicDrive.autoDrive(180, 0.8);
+//                            while (opModeIsActive() && runtime.seconds() < 1.25) {
+//                            }
+//
+//                            Gyro.rotate(75, .3);
+//
+//                            currentLiftPosition = 3;
+//                            LiftMotor1.setTargetPosition(currentLiftPosition);
+//                            LiftMotor2.setTargetPosition(currentLiftPosition);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(0.8);
+//                            LiftMotor2.setPower(0.8);
+//
+//                            intakeServo.setPosition(0.25);
+//
+//                            Gyro.rotate(-30, .3);
+
+                            // lower lift for park
 
                             LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
                             LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
-                            currentLiftPosition = 0;
                             LiftMotor1.setTargetPosition(0);
                             LiftMotor2.setTargetPosition(0);
-                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                             LiftMotor1.setPower(-0.95);
                             LiftMotor2.setPower(-0.95);
 
                             LiftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                             LiftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-                            while (opModeIsActive() && runtime.seconds() < .5) {
-                            }
-
-                            runtime.reset();
-                            LiftMotor1.setPower(-0.5);
-                            LiftMotor2.setPower(-0.5);
-                            while (opModeIsActive() && runtime.seconds() < 1.25) {
-                            }
-
                             LiftMotor1.setPower(0);
                             LiftMotor2.setPower(0);
+
+                            runtime.reset();
+                            holonomicDrive.autoDrive(90, 0.8);
+                            while (opModeIsActive() && runtime.seconds() < .25) {
+                            }
+
+                            holonomicDrive.autoDrive(0, 0);
 
                             done = true;
 
@@ -346,6 +462,8 @@ public class autoDrafting extends LinearOpMode {
 
 
                     } else {
+
+                        // if nothing is detected, proceed to location 2
 
                         // move forward to approach high junction
 
@@ -370,35 +488,72 @@ public class autoDrafting extends LinearOpMode {
 
                         Gyro.rotate(-30, .3);
 
+                        // retrieve from cone stack
+
+                        Gyro.rotate(-45,.3);
+
+                        runtime.reset();
+                        holonomicDrive.autoDrive(0, 0.8);
+                        while (opModeIsActive() && runtime.seconds() < 1.25) {
+                        }
+
+                        currentConePosition = 3;
+                        LiftMotor1.setTargetPosition(coneStack[currentConePosition]);
+                        LiftMotor2.setTargetPosition(coneStack[currentConePosition]);
+                        LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                        LiftMotor1.setPower(-0.9);
+                        LiftMotor2.setPower(-0.9);
+
+                        intakeServo.setPosition(-0.25);
+
+                        currentLiftPosition = 1;
+                        LiftMotor1.setTargetPosition(currentLiftPosition);
+                        LiftMotor2.setTargetPosition(currentLiftPosition);
+                        LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                        LiftMotor1.setPower(0.8);
+                        LiftMotor2.setPower(0.8);
+
+                        runtime.reset();
+                        holonomicDrive.autoDrive(180, 0.8);
+                        while (opModeIsActive() && runtime.seconds() < 1.25) {
+                        }
+
+                        Gyro.rotate(75, .3);
+
+                        currentLiftPosition = 3;
+                        LiftMotor1.setTargetPosition(currentLiftPosition);
+                        LiftMotor2.setTargetPosition(currentLiftPosition);
+                        LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                        LiftMotor1.setPower(0.8);
+                        LiftMotor2.setPower(0.8);
+
+                        intakeServo.setPosition(0.25);
+
+                        Gyro.rotate(-30, .3);
+
+                        // lower lift for park
+
                         holonomicDrive.autoDrive(0, 0);
 
                         LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
                         LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
-                        currentLiftPosition = 0;
                         LiftMotor1.setTargetPosition(0);
                         LiftMotor2.setTargetPosition(0);
-                        LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                         LiftMotor1.setPower(-0.95);
                         LiftMotor2.setPower(-0.95);
 
                         LiftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                         LiftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-                        while (opModeIsActive() && runtime.seconds() < .5) {
-                        }
-
-                        runtime.reset();
-                        LiftMotor1.setPower(-0.5);
-                        LiftMotor2.setPower(-0.5);
-                        while (opModeIsActive() && runtime.seconds() < 1.35) {
-                        }
-
                         LiftMotor1.setPower(0);
                         LiftMotor2.setPower(0);
 
                         done = true;
+
 
                     }
                     telemetry.update();
