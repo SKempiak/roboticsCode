@@ -262,7 +262,7 @@ public class hDriveMain extends OpMode
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(-0.9);
             liftMotor2.setPower(-0.9);
-            intakeServo.setPosition(0.25);
+
         } else if (RB_2Button && X_2Button && !X2IsPressed && currentLiftPosition > 0) {
             X2IsPressed = true;
             currentConePosition = 1;
@@ -272,7 +272,7 @@ public class hDriveMain extends OpMode
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(-0.9);
             liftMotor2.setPower(-0.9);
-            intakeServo.setPosition(0.25);
+            
         } else if (RB_2Button && A_2Button && !A2IsPressed && liftPos[currentLiftPosition] > 0) {
             A2IsPressed = true;
             currentConePosition = 2;
@@ -282,7 +282,7 @@ public class hDriveMain extends OpMode
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(-0.9);
             liftMotor2.setPower(-0.9);
-            intakeServo.setPosition(0.25);
+
         }   else if (RB_2Button && B_2Button && !B2IsPressed && currentLiftPosition > 0) {
             B2IsPressed = true;
             currentConePosition = 3;
@@ -292,7 +292,7 @@ public class hDriveMain extends OpMode
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(-0.9);
             liftMotor2.setPower(-0.9);
-            intakeServo.setPosition(0.25);
+
         }
 
         //manual lift override
