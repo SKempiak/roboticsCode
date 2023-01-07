@@ -31,11 +31,15 @@ public class hDriveMain extends OpMode
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor  FrontRightMotor, FrontLeftMotor, BackRightMotor, BackLeftMotor;
-    private DcMotorEx LiftMotor;
+    private DcMotorEx liftMotor, liftMotor2;
  //   private CRServo CMotor1, CMotor2, intakeServo;
-    private int[] liftPos = {0, 1800, 3000, 4600};
+   // private int[] liftPos = {0, 1800, 2800, 3900};
+    private int[] liftPos = {0, 1660, 2800, 4000};
+    private int[] coneStack = {240, 265, 325, 370};
     private int currentLiftPosition = 0;
-    private Servo intakeServo, rotatorIntakeServo;
+    private int currentConePosition = 0;
+    private int cLPInt = 0;
+    private Servo intakeServo;
     HolonomicDrive holonomicDrive;
     boolean YIsPressed = false;
     boolean XIsPressed = false;
@@ -58,6 +62,7 @@ public class hDriveMain extends OpMode
     private boolean Y2IsPressed = false;
     private boolean A2IsPressed = false;
     boolean back2IsPressed = false;
+    private boolean RJoyEngaged = false;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -73,9 +78,9 @@ public class hDriveMain extends OpMode
         FrontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeft");
         BackRightMotor  = hardwareMap.get(DcMotor.class, "backRight");
         BackLeftMotor = hardwareMap.get(DcMotor.class, "backLeft");
-        LiftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
+        liftMotor = hardwareMap.get(DcMotorEx.class, "LiftMotor1");
+        liftMotor2 = hardwareMap.get(DcMotorEx.class, "LiftMotor2");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
-        rotatorIntakeServo = hardwareMap.get(Servo.class, "rotatorServo");
 
         holonomicDrive = new HolonomicDrive(FrontRightMotor, FrontLeftMotor, BackRightMotor, BackLeftMotor);
 
@@ -89,13 +94,16 @@ public class hDriveMain extends OpMode
      */
     @Override
     public void init_loop() {
-        LiftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        LiftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//        liftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         //LiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        LiftMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor2.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-        LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor2.setDirection(DcMotorSimple.Direction.FORWARD);}
 
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -153,7 +161,7 @@ public class hDriveMain extends OpMode
         }
         if(B_2Button && closed == true && B2IsPressed == false){
             closed = false;
-            intakeServo.setPosition(0.25);
+            intakeServo.setPosition(0.165);
             B2IsPressed = true;
         }
         else if(B_2Button == false){
@@ -161,35 +169,41 @@ public class hDriveMain extends OpMode
         }
 
         // sway arm
-        if(X_2Button == true && X2IsPressed == false && currentLiftPosition >=1) {
-            X2IsPressed = true;
-            if(up) {
-                up = false;
-                rotatorIntakeServo.setPosition(0.655);
-                forward = false;
-            } else {
-                up = true;
-                telemetry.addLine("this is zero rn");
-                telemetry.update();
-                rotatorIntakeServo.setPosition(0.0);
-                forward = true;
-            }
-        }
-        else if(X_2Button == false) {
-            X2IsPressed = false;
-        }
+//        if(X_2Button == true && X2IsPressed == false && currentLiftPosition >=1) {
+//            X2IsPressed = true;
+//            if(up) {
+//                up = false;
+//                rotatorIntakeServo.setPosition(0.655);
+//                forward = false;
+//            } else {
+//                up = true;
+//                telemetry.addLine("this is zero rn");
+//                telemetry.update();
+//                rotatorIntakeServo.setPosition(0.25);
+//                forward = true;
+//            }
+//        }
+//        else if(X_2Button == false) {
+//            X2IsPressed = false;
+//        }
 
 
 
         // Make the lift go UP
         if(Y_2Button && !Y2IsPressed && currentLiftPosition < (liftPos.length - 1)){
-            A2IsPressed = true;
             currentLiftPosition += 1;
-            LiftMotor.setTargetPosition(liftPos[currentLiftPosition]);
-            LiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            LiftMotor.setPower(0.8);
-            Y2IsPressed = true;
+         //   liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
 
+
+            //   liftMotor.setPower(0.9);
+            liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(0.9);
+            liftMotor2.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor2.setPower(0.9);
+            Y2IsPressed = true;
+            cLPInt = liftPos[currentLiftPosition];
         } else if(!Y_2Button) {
             Y2IsPressed = false;
 
@@ -199,12 +213,74 @@ public class hDriveMain extends OpMode
         if (A_2Button && !A2IsPressed && currentLiftPosition > 0){
             A2IsPressed = true;
             currentLiftPosition -= 1;
-            LiftMotor.setTargetPosition(liftPos[currentLiftPosition]);
-            LiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            LiftMotor.setPower(-0.8);
-
+            liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(0.9);
+            liftMotor2.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor2.setPower(0.9);
+            cLPInt = liftPos[currentLiftPosition];
         } else if(!A_2Button) {
             A2IsPressed = false;
+        }
+
+        //custom lift override
+        if (RightJoyY2<0 && !RJoyEngaged && currentLiftPosition > 0){
+            RJoyEngaged = true;
+            cLPInt += 100;
+            liftMotor.setTargetPosition(cLPInt);
+            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(0.9);
+            liftMotor2.setTargetPosition(cLPInt);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor2.setPower(0.9);
+        } else if(RightJoyY2 == 0) {
+            RJoyEngaged = false;
+        }
+        if (RightJoyY2>0 && !RJoyEngaged && currentLiftPosition > 0){
+            RJoyEngaged = true;
+            cLPInt -= 100;
+            liftMotor.setTargetPosition(cLPInt);
+            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(0.9);
+            liftMotor2.setTargetPosition(cLPInt);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor2.setPower(0.9);
+        } else if(RightJoyY2 == 0) {
+            RJoyEngaged = false;
+        }
+
+        // If the lift is positioned one place above where it needs to go next
+        // drop the intake to take a cone from the stack
+
+        if (RB_2Button && Y_2Button && !Y2IsPressed && currentLiftPosition > 0) {
+            Y2IsPressed = true;
+            currentConePosition = 0;
+            liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(0.9);
+            intakeServo.setPosition(0.25);
+        } else if (RB_2Button && X_2Button && !X2IsPressed && currentLiftPosition > 0) {
+                X2IsPressed = true;
+                currentConePosition = 1;
+                liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+                liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                liftMotor.setPower(0.9);
+                intakeServo.setPosition(0.25);
+        } else if (RB_2Button && A_2Button && !A2IsPressed && liftPos[currentLiftPosition] > 0) {
+            A2IsPressed = true;
+            currentConePosition = 2;
+            liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(0.9);
+            intakeServo.setPosition(0.25);
+        }   else if (RB_2Button && B_2Button && !B2IsPressed && currentLiftPosition > 0) {
+            B2IsPressed = true;
+            currentConePosition = 3;
+            liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(0.9);
+            intakeServo.setPosition(0.25);
         }
 
         //manual lift override
@@ -224,8 +300,8 @@ public class hDriveMain extends OpMode
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addLine("Current Lift position: " + currentLiftPosition + "\nCurrent Lift Ticks: " + liftPos[currentLiftPosition]);
-        telemetry.addLine("Current Lift Motor Ticks: "  + LiftMotor.getCurrentPosition());
-        telemetry.addLine("intake open: "  + LiftMotor.getCurrentPosition());
+        telemetry.addLine("Current Lift Motor Ticks: "  + liftMotor.getCurrentPosition());
+        telemetry.addLine("intake open: "  + liftMotor.getCurrentPosition());
         telemetry.update();
     }
 
