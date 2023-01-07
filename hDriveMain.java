@@ -32,8 +32,8 @@ public class hDriveMain extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor  FrontRightMotor, FrontLeftMotor, BackRightMotor, BackLeftMotor;
     private DcMotorEx liftMotor, liftMotor2;
- //   private CRServo CMotor1, CMotor2, intakeServo;
-   // private int[] liftPos = {0, 1800, 2800, 3900};
+    //   private CRServo CMotor1, CMotor2, intakeServo;
+    // private int[] liftPos = {0, 1800, 2800, 3900};
     private int[] liftPos = {0, 1660, 2800, 4000};
     private int[] coneStack = {240, 265, 325, 370};
     private int currentLiftPosition = 0;
@@ -192,7 +192,7 @@ public class hDriveMain extends OpMode
         // Make the lift go UP
         if(Y_2Button && !Y2IsPressed && currentLiftPosition < (liftPos.length - 1)){
             currentLiftPosition += 1;
-         //   liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+            //   liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
 
 
             //   liftMotor.setPower(0.9);
@@ -256,30 +256,42 @@ public class hDriveMain extends OpMode
         if (RB_2Button && Y_2Button && !Y2IsPressed && currentLiftPosition > 0) {
             Y2IsPressed = true;
             currentConePosition = 0;
-            liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor.setTargetPosition(coneStack[currentConePosition]);
+            liftMotor2.setTargetPosition(coneStack[currentConePosition]);
             liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(0.9);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(-0.9);
+            liftMotor2.setPower(-0.9);
             intakeServo.setPosition(0.25);
         } else if (RB_2Button && X_2Button && !X2IsPressed && currentLiftPosition > 0) {
-                X2IsPressed = true;
-                currentConePosition = 1;
-                liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
-                liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                liftMotor.setPower(0.9);
-                intakeServo.setPosition(0.25);
+            X2IsPressed = true;
+            currentConePosition = 1;
+            liftMotor.setTargetPosition(coneStack[currentConePosition]);
+            liftMotor2.setTargetPosition(coneStack[currentConePosition]);
+            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(-0.9);
+            liftMotor2.setPower(-0.9);
+            intakeServo.setPosition(0.25);
         } else if (RB_2Button && A_2Button && !A2IsPressed && liftPos[currentLiftPosition] > 0) {
             A2IsPressed = true;
             currentConePosition = 2;
-            liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor.setTargetPosition(coneStack[currentConePosition]);
+            liftMotor2.setTargetPosition(coneStack[currentConePosition]);
             liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(0.9);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(-0.9);
+            liftMotor2.setPower(-0.9);
             intakeServo.setPosition(0.25);
         }   else if (RB_2Button && B_2Button && !B2IsPressed && currentLiftPosition > 0) {
             B2IsPressed = true;
             currentConePosition = 3;
-            liftMotor.setTargetPosition(liftPos[currentLiftPosition]);
+            liftMotor.setTargetPosition(coneStack[currentConePosition]);
+            liftMotor2.setTargetPosition(coneStack[currentConePosition]);
             liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            liftMotor.setPower(0.9);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(-0.9);
+            liftMotor2.setPower(-0.9);
             intakeServo.setPosition(0.25);
         }
 
