@@ -81,7 +81,7 @@ public class autoDrafting extends LinearOpMode {
     gyro Gyro;
     HolonomicDrive holonomicDrive;
 
-    private int[] liftPos = {0, 1800, 3000, 4500};
+    private int[] liftPos = {0, 1660, 2800, 4000};
     private int[] coneStack = {240, 265, 325, 370};
     int currentLiftPosition = 0;
     private int currentConePosition = 0;
@@ -129,12 +129,15 @@ public class autoDrafting extends LinearOpMode {
         angleMotor = hardwareMap.get(DcMotorEx.class, "rotationMotor");
 
         LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//      LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         LiftMotor1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         LiftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        //LiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         LiftMotor1.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         LiftMotor2.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+
         LiftMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        LiftMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
@@ -151,46 +154,47 @@ public class autoDrafting extends LinearOpMode {
                     for (AprilTagDetection tag : currentDetections) {
                         if (tag.id == LEFT || tag.id == MIDDLE || tag.id == RIGHT) {
                             tagOfInterest = tag;
-                            telemetry.addData(",", tag);
-                            telemetry.update();
                             tagFound = true;
                             break;
                         }
                     }
 
                     if (tagFound) {
-                        telemetry.addLine("Tag of interest is in sight!");
                         currentLiftPosition = 1;
                         LiftMotor1.setTargetPosition(liftPos[currentLiftPosition]);
-                        LiftMotor2.setTargetPosition(liftPos[currentLiftPosition]);
                         LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                         LiftMotor1.setPower(0.8);
+
+                        LiftMotor2.setTargetPosition(liftPos[currentLiftPosition]);
+                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                         LiftMotor2.setPower(0.8);
+
                         if (tagOfInterest.id == LEFT) {
 
                             // move forward
 
                             runtime.reset();
                             holonomicDrive.autoDrive(0, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < 1.25) {
+                            while (opModeIsActive() && runtime.seconds() < 1.7) {
                             }
 
                             // get in position to deposit cone at high junction
 
-                            Gyro.rotate(30, .3);
-
-                            currentLiftPosition = 3;
-                            LiftMotor1.setTargetPosition(currentLiftPosition);
-                            LiftMotor2.setTargetPosition(currentLiftPosition);
-                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            LiftMotor1.setPower(0.8);
-                            LiftMotor2.setPower(0.8);
-
-                            intakeServo.setPosition(0.25);
-
-                            Gyro.rotate(-30, .3);
+//                          Gyro.rotate(-30, .3);
+//
+//                            currentLiftPosition = 3;
+//
+//                            LiftMotor1.setTargetPosition(liftPos[currentLiftPosition]);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(0.9);
+//
+//                            LiftMotor2.setTargetPosition(liftPos[currentLiftPosition]);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setPower(0.9);
+//
+                              intakeServo.setPosition(0.42);
+//
+//                            Gyro.rotate(30, .3);
 
                             // retrieve from cone stack
 //
@@ -243,21 +247,10 @@ public class autoDrafting extends LinearOpMode {
 
                             runtime.reset();
                             holonomicDrive.autoDrive(270, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < .25) {
+                            while (opModeIsActive() && runtime.seconds() < 1.25) {
                             }
 
                             holonomicDrive.autoDrive(0, 0);
-
-                            LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-                            LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-
-                            LiftMotor1.setTargetPosition(0);
-                            LiftMotor2.setTargetPosition(0);
-                            LiftMotor1.setPower(-0.95);
-                            LiftMotor2.setPower(-0.95);
-
-                            LiftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                            LiftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                             done = true;
 
@@ -267,24 +260,27 @@ public class autoDrafting extends LinearOpMode {
 
                             runtime.reset();
                             holonomicDrive.autoDrive(0, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < 1.25) {
+                            while (opModeIsActive() && runtime.seconds() < 1.7) {
                             }
 
-                            // deposit pre-loaded cone at high junction
-
-                            Gyro.rotate(30, .3);
-
-                            currentLiftPosition = 3;
-                            LiftMotor1.setTargetPosition(currentLiftPosition);
-                            LiftMotor2.setTargetPosition(currentLiftPosition);
-                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            LiftMotor1.setPower(0.8);
-                            LiftMotor2.setPower(0.8);
-
-                            intakeServo.setPosition(0.25);
-
-                            Gyro.rotate(-30, .3);
+//                            // deposit pre-loaded cone at high junction
+//
+//                            holonomicDrive.autoDrive(0, 0);
+//                            
+//                            Gyro.rotate(-30, .3);
+//
+//                            currentLiftPosition = 3;
+//                            LiftMotor1.setTargetPosition(liftPos[currentLiftPosition]);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(0.8);
+//
+//                            LiftMotor2.setTargetPosition(liftPos[currentLiftPosition]);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setPower(0.8);
+////
+//                            intakeServo.setPosition(0.42);
+////
+//                            Gyro.rotate(30, .3);
 
                             // retrieve from cone stack
 //
@@ -336,53 +332,39 @@ public class autoDrafting extends LinearOpMode {
 
                             holonomicDrive.autoDrive(0, 0);
 
-                            LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-                            LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-
-                            LiftMotor1.setTargetPosition(0);
-                            LiftMotor2.setTargetPosition(0);
-                            LiftMotor1.setPower(-0.95);
-                            LiftMotor2.setPower(-0.95);
-
-                            LiftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                            LiftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-                            LiftMotor1.setPower(0);
-                            LiftMotor2.setPower(0);
-
                             done = true;
 
                         } else {
 
-                            // move right and forward
-
-                            runtime.reset();
-                            holonomicDrive.autoDrive(90, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < 0.9) {
-                            }
+                            // move forward and right
 
                             runtime.reset();
                             holonomicDrive.autoDrive(0, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < .75) {
+                            while (opModeIsActive() && runtime.seconds() < 1.75) {
                             }
 
-                            // get in position to deposit pre-loaded cone
+                            runtime.reset();
+                            holonomicDrive.autoDrive(90, 0.8);
+                            while (opModeIsActive() && runtime.seconds() < 1) {
+                            }
 
-                            Gyro.rotate(30, .3);
-
-                            currentLiftPosition = 3;
-                            LiftMotor1.setTargetPosition(liftPos[currentLiftPosition]);
-                            LiftMotor2.setTargetPosition(liftPos[currentLiftPosition]);
-                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                            LiftMotor1.setPower(0.85);
-                            LiftMotor2.setPower(0.85);
-
-                            intakeServo.setPosition(0.25);
-
-                            Gyro.rotate(-30, .3);
-
-                            // navigate to cone stack
+//                            // get in position to deposit pre-loaded cone
+//
+//                            Gyro.rotate(-30, .3);
+//
+//                            currentLiftPosition = 3;
+//                            LiftMotor1.setTargetPosition(liftPos[currentLiftPosition]);
+//                            LiftMotor2.setTargetPosition(liftPos[currentLiftPosition]);
+//                            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                            LiftMotor1.setPower(0.85);
+//                            LiftMotor2.setPower(0.85);
+//
+                            intakeServo.setPosition(0.42);
+//
+//                            Gyro.rotate(30, .3);
+//
+//                            // navigate to cone stack
 //
 //                            runtime.reset();
 //                            holonomicDrive.autoDrive(0, 0.8);
@@ -433,27 +415,6 @@ public class autoDrafting extends LinearOpMode {
 //
 //                            Gyro.rotate(-30, .3);
 
-                            // lower lift for park
-
-                            LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-                            LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-
-                            LiftMotor1.setTargetPosition(0);
-                            LiftMotor2.setTargetPosition(0);
-                            LiftMotor1.setPower(-0.95);
-                            LiftMotor2.setPower(-0.95);
-
-                            LiftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                            LiftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-                            LiftMotor1.setPower(0);
-                            LiftMotor2.setPower(0);
-
-                            runtime.reset();
-                            holonomicDrive.autoDrive(90, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < .25) {
-                            }
-
                             holonomicDrive.autoDrive(0, 0);
 
                             done = true;
@@ -461,121 +422,45 @@ public class autoDrafting extends LinearOpMode {
                         }
 
 
-                    } else {
-
-                        // if nothing is detected, proceed to location 2
-
-                        // move forward to approach high junction
-
-                        runtime.reset();
-                        holonomicDrive.autoDrive(0, 0.8);
-                        while (opModeIsActive() && runtime.seconds() < 1.25) {
-                        }
-
-                        // deposit pre-loaded cone at high junction
-
-                        Gyro.rotate(30, .3);
-
-                        currentLiftPosition = 3;
-                        LiftMotor1.setTargetPosition(currentLiftPosition);
-                        LiftMotor2.setTargetPosition(currentLiftPosition);
-                        LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor1.setPower(0.8);
-                        LiftMotor2.setPower(0.8);
-
-                        intakeServo.setPosition(0.25);
-
-                        Gyro.rotate(-30, .3);
-
-                        // retrieve from cone stack
-
-                        Gyro.rotate(-45,.3);
-
-                        runtime.reset();
-                        holonomicDrive.autoDrive(0, 0.8);
-                        while (opModeIsActive() && runtime.seconds() < 1.25) {
-                        }
-
-                        currentConePosition = 3;
-                        LiftMotor1.setTargetPosition(coneStack[currentConePosition]);
-                        LiftMotor2.setTargetPosition(coneStack[currentConePosition]);
-                        LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor1.setPower(-0.9);
-                        LiftMotor2.setPower(-0.9);
-
-                        intakeServo.setPosition(-0.25);
-
-                        currentLiftPosition = 1;
-                        LiftMotor1.setTargetPosition(currentLiftPosition);
-                        LiftMotor2.setTargetPosition(currentLiftPosition);
-                        LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor1.setPower(0.8);
-                        LiftMotor2.setPower(0.8);
-
-                        runtime.reset();
-                        holonomicDrive.autoDrive(180, 0.8);
-                        while (opModeIsActive() && runtime.seconds() < 1.25) {
-                        }
-
-                        Gyro.rotate(75, .3);
-
-                        currentLiftPosition = 3;
-                        LiftMotor1.setTargetPosition(currentLiftPosition);
-                        LiftMotor2.setTargetPosition(currentLiftPosition);
-                        LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                        LiftMotor1.setPower(0.8);
-                        LiftMotor2.setPower(0.8);
-
-                        intakeServo.setPosition(0.25);
-
-                        Gyro.rotate(-30, .3);
-
-                        // lower lift for park
-
-                        holonomicDrive.autoDrive(0, 0);
-
-                        LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-                        LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-
-                        LiftMotor1.setTargetPosition(0);
-                        LiftMotor2.setTargetPosition(0);
-                        LiftMotor1.setPower(-0.95);
-                        LiftMotor2.setPower(-0.95);
-
-                        LiftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                        LiftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-                        LiftMotor1.setPower(0);
-                        LiftMotor2.setPower(0);
-
-                        done = true;
-
+                    }
 
                     }
-                    telemetry.update();
+                else {
+
+                    // if nothing is detected, proceed to location 2
+
+                    // move forward to approach high junction
+
+                    runtime.reset();
+                    holonomicDrive.autoDrive(0, 0.8);
+                    while (opModeIsActive() && runtime.seconds() < 1.25) {
+                    }
+
+//                    // lower lift for park
+
+                    holonomicDrive.autoDrive(0, 0);
+                    done = true;
+
                 }
-
-                telemetry.addLine("Current Lift Motor Ticks: " + LiftMotor1.getCurrentPosition());
-                telemetry.update();
-
-
 
 
             }
+
+            LiftMotor1.setTargetPosition(0);
+            LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            LiftMotor1.setPower(0.9);
+
+            LiftMotor2.setTargetPosition(0);
+            LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            LiftMotor2.setPower(0.9);
+
+            runtime.reset();
+            while (opModeIsActive() && runtime.seconds() < 1.5) {
+            }
+
+            telemetry.addLine("Current Lift Motor Ticks: " + LiftMotor2.getCurrentPosition());
+            telemetry.update();
+
         }
-    }
-    void tagToTelemetry(AprilTagDetection detection)
-    {
-        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
-        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
-        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
-        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
-        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
-        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
 }
