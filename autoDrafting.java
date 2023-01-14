@@ -175,7 +175,7 @@ public class beautifulAuto extends LinearOpMode {
 
                             runtime.reset();
                             holonomicDrive.autoDrive(0, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < 1.75) {
+                            while (opModeIsActive() && runtime.seconds() < 1.65) {
                             }
 
                             intakeServo.setPosition(0.42);
@@ -197,7 +197,7 @@ public class beautifulAuto extends LinearOpMode {
 
                             runtime.reset();
                             holonomicDrive.autoDrive(0, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < 1.75) {
+                            while (opModeIsActive() && runtime.seconds() < 1.65) {
                             }
 
                             holonomicDrive.autoDrive(0, 0);
@@ -210,7 +210,7 @@ public class beautifulAuto extends LinearOpMode {
 
                             runtime.reset();
                             holonomicDrive.autoDrive(0, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < 1.75) {
+                            while (opModeIsActive() && runtime.seconds() < 1.65) {
                             }
 
                             runtime.reset();
