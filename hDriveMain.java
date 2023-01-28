@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -62,7 +60,8 @@ public class hDriveMain extends OpMode
     private boolean Y2IsPressed = false;
     private boolean A2IsPressed = false;
     boolean back2IsPressed = false;
-    private boolean RJoyEngaged = false;
+    private boolean LJoyEngaged = false;
+    boolean LT2IsPressed = false;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -130,7 +129,7 @@ public class hDriveMain extends OpMode
             y = -gamepad1.left_stick_y;
             z = gamepad1.right_stick_x;
         }
-        double RightJoyY2 = gamepad2.right_stick_y;
+        double LeftJoyY2 = gamepad2.left_stick_y;
 
         boolean B_1Button = gamepad1.b;
         boolean A_1Button = gamepad1.a;
@@ -149,23 +148,24 @@ public class hDriveMain extends OpMode
         boolean Y_2Button = gamepad2.y;
         boolean LB_2Button = gamepad2.left_bumper;
         boolean backButton2 = gamepad1.back;
+        double LT_2Button = gamepad2.left_trigger;
 
         // Open and close pick-point
-        if(B_2Button && closed == false && B2IsPressed == false){
+        if(RB_2Button && closed == false && RB2IsPressed == false){
             closed = true;
             intakeServo.setPosition(0.0);
-            B2IsPressed = true;
+            RB2IsPressed = true;
         }
-        else if(B_2Button == false){
-            B2IsPressed = false;
+        else if(RB_2Button == false){
+            RB2IsPressed = false;
         }
-        if(B_2Button && closed == true && B2IsPressed == false){
+        if(RB_2Button && closed == true && RB2IsPressed == false){
             closed = false;
-            intakeServo.setPosition(0.165);
-            B2IsPressed = true;
+            intakeServo.setPosition(0.44);
+            RB2IsPressed = true;
         }
-        else if(B_2Button == false){
-            B2IsPressed = false;
+        else if(RB_2Button == false){
+            RB2IsPressed = false;
         }
 
         // sway arm
@@ -204,6 +204,7 @@ public class hDriveMain extends OpMode
             liftMotor2.setPower(0.9);
             Y2IsPressed = true;
             cLPInt = liftPos[currentLiftPosition];
+            currentConePosition = 3;
         } else if(!Y_2Button) {
             Y2IsPressed = false;
 
@@ -225,8 +226,8 @@ public class hDriveMain extends OpMode
         }
 
         //custom lift override
-        if (RightJoyY2<0 && !RJoyEngaged && currentLiftPosition > 0){
-            RJoyEngaged = true;
+        if (LeftJoyY2<0 && !LJoyEngaged && currentLiftPosition > 0){
+            LJoyEngaged = true;
             cLPInt += 100;
             liftMotor.setTargetPosition(cLPInt);
             liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -234,11 +235,11 @@ public class hDriveMain extends OpMode
             liftMotor2.setTargetPosition(cLPInt);
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor2.setPower(0.9);
-        } else if(RightJoyY2 == 0) {
-            RJoyEngaged = false;
+        } else if(LeftJoyY2 == 0) {
+            LJoyEngaged = false;
         }
-        if (RightJoyY2>0 && !RJoyEngaged && currentLiftPosition > 0){
-            RJoyEngaged = true;
+        if (LeftJoyY2>0 && !LJoyEngaged && currentLiftPosition > 0){
+            LJoyEngaged = true;
             cLPInt -= 100;
             liftMotor.setTargetPosition(cLPInt);
             liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -246,8 +247,8 @@ public class hDriveMain extends OpMode
             liftMotor2.setTargetPosition(cLPInt);
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor2.setPower(0.9);
-        } else if(RightJoyY2 == 0) {
-            RJoyEngaged = false;
+        } else if(LeftJoyY2 == 0) {
+            LJoyEngaged = false;
         }
 
         // If the lift is positioned one place above where it needs to go next
@@ -262,7 +263,6 @@ public class hDriveMain extends OpMode
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(-0.9);
             liftMotor2.setPower(-0.9);
-
         } else if (RB_2Button && X_2Button && !X2IsPressed && currentLiftPosition > 0) {
             X2IsPressed = true;
             currentConePosition = 1;
@@ -272,7 +272,7 @@ public class hDriveMain extends OpMode
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(-0.9);
             liftMotor2.setPower(-0.9);
-            
+
         } else if (RB_2Button && A_2Button && !A2IsPressed && liftPos[currentLiftPosition] > 0) {
             A2IsPressed = true;
             currentConePosition = 2;
@@ -295,19 +295,33 @@ public class hDriveMain extends OpMode
 
         }
 
+        if(LT_2Button != 0 && !LT2IsPressed) {
+            LT2IsPressed = true;
+            if(currentLiftPosition != 0)
+                currentConePosition -= 1;
+            liftMotor.setTargetPosition(coneStack[currentConePosition]);
+            liftMotor2.setTargetPosition(coneStack[currentConePosition]);
+            liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(-0.9);
+            liftMotor2.setPower(-0.9);
+        } else if(LT_2Button == 0) {
+            LT2IsPressed = false;
+        }
+
         //manual lift override
 //        if(backButton2 && !back2IsPressed){
 //            back2IsPressed = true;
 //            currentLiftPosition = 0;
-//            LiftMotor.setPower(RightJoyY2);
-//            if(RightJoyY2 == 0.0) {
+//            LiftMotor.setPower(LeftJoyY2);
+//            if(LeftJoyY2 == 0.0) {
 //                LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //            }
 //        } else if(!backButton2) {
 //            back2IsPressed = false;
 //        }
 
-        holonomicDrive.teleopDrive(x/0.75,y/0.75,z/0.75);
+        holonomicDrive.teleopDrive(x/0.85,y/0.85,z/0.85);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
