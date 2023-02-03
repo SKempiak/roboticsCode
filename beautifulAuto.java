@@ -37,7 +37,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -126,12 +125,12 @@ public class beautifulAuto extends LinearOpMode {
 
         LiftMotor1 = hardwareMap.get(DcMotorEx.class, "LiftMotor1");
         LiftMotor2 = hardwareMap.get(DcMotorEx.class, "LiftMotor2");
-        angleMotor = hardwareMap.get(DcMotorEx.class, "rotationMotor");
 
         LiftMotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 //      LiftMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         LiftMotor1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         LiftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        //LiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         //LiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         LiftMotor1.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         LiftMotor2.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -149,6 +148,9 @@ public class beautifulAuto extends LinearOpMode {
             while (opModeIsActive() & done != true) {
                 ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
                 intakeServo.setPosition(0.0);
+                runtime.reset();
+                while (opModeIsActive() && runtime.seconds() < .25) {
+                }
                 if (currentDetections.size() != 0) {
                     boolean tagFound = false;
                     for (AprilTagDetection tag : currentDetections) {
@@ -161,11 +163,11 @@ public class beautifulAuto extends LinearOpMode {
 
                     if (tagFound) {
 
-                        LiftMotor1.setTargetPosition(300);
+                        LiftMotor1.setTargetPosition(100);
                         LiftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                         LiftMotor1.setPower(0.9);
 
-                        LiftMotor2.setTargetPosition(300);
+                        LiftMotor2.setTargetPosition(100);
                         LiftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                         LiftMotor2.setPower(0.9);
 
@@ -178,7 +180,7 @@ public class beautifulAuto extends LinearOpMode {
                             while (opModeIsActive() && runtime.seconds() < 1.65) {
                             }
 
-                            intakeServo.setPosition(0.42);
+                            // intakeServo.setPosition(0.42);
 
                             // move left and park
 
@@ -193,14 +195,28 @@ public class beautifulAuto extends LinearOpMode {
 
                         } else if (tagOfInterest.id == MIDDLE) {
 
-                            // move forward to approach high junction
+                            // move forward
 
                             runtime.reset();
                             holonomicDrive.autoDrive(0, 0.8);
-                            while (opModeIsActive() && runtime.seconds() < 1.65) {
+                            while (opModeIsActive() && runtime.seconds() < 1.6) {
+                            }
+
+                            // move forward MORE (and back)
+
+                            runtime.reset();
+                            holonomicDrive.autoDrive(0, 0.8);
+                            while (opModeIsActive() && runtime.seconds() < 0.3) {
+                            }
+
+                            runtime.reset();
+                            holonomicDrive.autoDrive(180, 0.8);
+                            while (opModeIsActive() && runtime.seconds() < 0.35) {
                             }
 
                             holonomicDrive.autoDrive(0, 0);
+
+                            // intakeServo.setPosition(0.42);
 
                             done = true;
 
@@ -218,8 +234,7 @@ public class beautifulAuto extends LinearOpMode {
                             while (opModeIsActive() && runtime.seconds() < 1) {
                             }
 
-                            intakeServo.setPosition(0.42);
-
+                            // intakeServo.setPosition(0.42);
 
                             holonomicDrive.autoDrive(0, 0);
 
